@@ -8,33 +8,56 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <style>
-    * { box-sizing: border-box; font-family: 'Rubik', sans-serif; }
+    :root {
+      --primary: #0ff;
+      --bg-dark: #050d1a;
+      --bg-light: #ecf5ff;
+      --text-dark: #ffffff;
+      --text-light: #111;
+    }
+    * { box-sizing: border-box; font-family: 'Rubik', sans-serif; transition: 0.3s ease; }
     body {
       margin: 0;
-      background: linear-gradient(to bottom, #050d1a, #0c1b2e);
-      color: #fff;
-      padding: 0;
-      transition: background 0.5s, color 0.5s;
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+    body.light {
+      background: var(--bg-light);
+      color: var(--text-light);
     }
     header {
       text-align: center;
       padding: 2rem 1rem;
       background: linear-gradient(135deg, #00c3ff, #0ff);
       color: #000;
+      position: relative;
+    }
+    .mode-toggle {
+      position: absolute;
+      top: 20px; right: 20px;
+      background: var(--primary);
+      color: #000;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
     }
     .join-btn {
-      background: #0ff;
+      background: var(--primary);
       padding: 1rem 2rem;
       border-radius: 10px;
       font-weight: bold;
       cursor: pointer;
       border: none;
       box-shadow: 0 0 15px rgba(0,255,255,0.4);
-      transition: transform 0.3s ease;
     }
     .join-btn:hover { transform: scale(1.05); }
-
-    .section { max-width: 800px; margin: auto; padding: 2rem 1.5rem; }
+    .section {
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem 1.5rem;
+    }
     .rank-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -42,22 +65,24 @@
       margin-top: 2rem;
     }
     .rank-card {
-      background: #131a2f;
-      border: 2px solid #00fcd1;
+      background: rgba(255,255,255,0.05);
+      border: 2px solid var(--primary);
       border-radius: 12px;
       padding: 1rem;
-      box-shadow: 0 0 15px rgba(0,255,255,0.15);
-      transition: transform 0.3s ease;
+      box-shadow: 0 0 15px rgba(0,255,255,0.1);
+      backdrop-filter: blur(10px);
     }
-    .rank-card:hover { transform: scale(1.05); }
-
+    body.light .rank-card {
+      background: rgba(0,0,0,0.04);
+      border-color: #00aaff;
+    }
     form, .comments {
       background: rgba(255,255,255,0.04);
       padding: 2rem;
       border-radius: 10px;
       margin-top: 2rem;
+      backdrop-filter: blur(10px);
     }
-
     input, select, textarea, button {
       width: 100%;
       padding: 0.9rem;
@@ -66,32 +91,60 @@
       border: none;
       font-size: 1rem;
     }
-
     button {
-      background: #00fcd1;
+      background: var(--primary);
       color: #000;
       font-weight: bold;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
     button:hover {
-      background: #0ff;
       transform: scale(1.03);
+      opacity: 0.95;
     }
-
     .comment-item {
-      background: #1c1e2e;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-top: 0.5rem;
+      background: rgba(255,255,255,0.05);
+      border-left: 4px solid var(--primary);
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,255,255,0.1);
     }
-
+    body.light .comment-item {
+      background: rgba(0,0,0,0.04);
+      border-left-color: #00c3ff;
+    }
+    .comment-item:hover { transform: scale(1.02); }
+    .comment-item .pesan { display: block; margin: 0.5rem 0; }
     .comment-item button {
-      width: auto;
+      background: var(--primary);
+      color: #000;
       padding: 0.4rem 0.8rem;
-      margin: 0.3rem 0.3rem 0 0;
+      border-radius: 6px;
+      margin-right: 0.5rem;
+      border: none;
       font-size: 0.9rem;
-      background: #0ff;
+      cursor: pointer;
+    }
+    #welcome-bubble {
+      position: fixed;
+      bottom: 20px; left: 20px;
+      background: var(--primary);
+      color: #000;
+      padding: 1rem 1.2rem;
+      border-radius: 16px;
+      font-weight: bold;
+      box-shadow: 0 4px 16px rgba(0,255,255,0.2);
+      z-index: 9999;
+      animation: fadeBubble 0.4s ease, bubbleHide 6s forwards;
+    }
+    @keyframes fadeBubble {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bubbleHide {
+      0% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0; display: none; }
     }
   </style>
 </head>
@@ -101,7 +154,10 @@
     <h1>KaiNetworkMC</h1>
     <p>IP: <strong>play.kainetworkmc.xyz</strong> | Port: <strong>25450</strong></p>
     <button class="join-btn" onclick="window.open('minecraft://?addExternalServer=KaiNetworkMC|play.kainetworkmc.xyz:25450')">🚀 Join Now</button>
+    <button class="mode-toggle" onclick="toggleMode()">💡 Ganti Mode</button>
   </header>
+
+  <div id="welcome-bubble">👋 Selamat Datang di <strong>KaiNetworkMC</strong>!</div>
 
   <section class="section">
     <h2>🎖️ Daftar Rank</h2>
@@ -145,18 +201,15 @@
   </section>
 
   <script>
-    // Konfigurasi Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyCf2cQuukQwHfgApcRr4NTF4xRu4wdIyqQ",
       authDomain: "kainetworkmc.firebaseapp.com",
       databaseURL: "https://kainetworkmc-default-rtdb.asia-southeast1.firebasedatabase.app",
       projectId: "kainetworkmc",
-      storageBucket: "kainetworkmc.firebasestorage.app",
+      storageBucket: "kainetworkmc.appspot.com",
       messagingSenderId: "751130541611",
-      appId: "1:751130541611:web:f2b2df86d48623d65cb46e",
-      measurementId: "G-ZKJ85K24YD"
+      appId: "1:751130541611:web:f2b2df86d48623d65cb46e"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
@@ -193,7 +246,7 @@
           const k = data[id];
           box.innerHTML += `
             <div class="comment-item" data-id="${id}">
-              <strong>${k.nama}</strong><br>
+              <strong>${k.nama}</strong>
               <span class="pesan">${k.pesan}</span><br>
               <button onclick="editKomentar('${id}')">✏️ Edit</button>
               <button onclick="hapusKomentar('${id}')">🗑️ Hapus</button>
@@ -203,7 +256,7 @@
     }
 
     function hapusKomentar(id) {
-      if (confirm("Yakin hapus komentar ini?")) {
+      if (confirm("Yakin ingin menghapus komentar ini?")) {
         db.ref("komentar/" + id).remove();
       }
     }
@@ -216,7 +269,18 @@
       }
     }
 
-    tampilKomentar();
+    function toggleMode() {
+      const body = document.body;
+      body.classList.toggle("light");
+      localStorage.setItem("mode", body.classList.contains("light") ? "light" : "dark");
+    }
+
+    (function () {
+      const mode = localStorage.getItem("mode");
+      if (mode === "light") document.body.classList.add("light");
+      tampilKomentar();
+    })();
   </script>
+
 </body>
 </html>
