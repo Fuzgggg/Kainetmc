@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KaiNetworkMC Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; font-family: 'Rubik', sans-serif; }
+    body {
+      margin: 0;
+      background: linear-gradient(to bottom, #050d1a, #0c1b2e);
+      color: #fff; padding: 0;
+      transition: background 0.5s, color 0.5s;
+    }
+    header {
+      text-align: center; padding: 2.5rem 1rem;
+      background: linear-gradient(135deg, #00c3ff, #0ff); color: #000;
+    }
+    header h1 { font-size: 2.7rem; margin-bottom: 0.5rem; }
+    .join-btn {
+      background: #0ff; border: none;
+      padding: 1rem 2rem; border-radius: 10px;
+      font-weight: bold; cursor: pointer;
+      box-shadow: 0 0 15px rgba(0,255,255,0.4);
+      transition: transform 0.3s ease;
+    }
+    .join-btn:hover { transform: scale(1.05); }
+    .section { max-width: 900px; margin: auto; padding: 2rem 1.5rem; }
+
+    .status-box {
+      background: #111827; padding: 1rem;
+      text-align: center; border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .rank-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .rank-card {
+      background: #131a2f;
+      border: 2px solid #00fcd1;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 0 15px rgba(0,255,255,0.15);
+      transition: transform 0.3s ease;
+      color: #ccc;
+    }
+    .rank-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0,255,255,0.4);
+    }
+    .rank-card h3 { color: #0ff; margin-bottom: 0.5rem; }
+
+    form {
+      background: rgba(255,255,255,0.04);
+      padding: 2rem; border-radius: 10px;
+      margin-top: 2rem;
+    }
+    input, select, button {
+      width: 100%; padding: 0.9rem;
+      margin: 0.7rem 0; border-radius: 8px;
+      border: none; font-size: 1rem;
+    }
+    button {
+      background: #00fcd1; font-weight: bold;
+      color: #000; cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background: #0ff; transform: scale(1.03);
+    }
+
+    .comments {
+      background: rgba(255,255,255,0.03);
+      padding: 1.5rem; border-radius: 10px;
+      margin-top: 3rem;
+    }
+    .comments textarea {
+      width: 100%; border: none;
+      border-radius: 8px; padding: 1rem;
+      margin-top: 0.7rem;
+    }
+    .comment-item {
+      background: #1c1e2e; padding: 1rem;
+      border-radius: 8px; margin-top: 0.5rem;
+    }
+
+    .button-link {
+      background: linear-gradient(135deg, #00fcd1, #0ff);
+      color: #000; font-weight: bold;
+      border: none; padding: 1rem 1.5rem;
+      margin: 0.5rem; border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,255,255,0.4);
+      cursor: pointer; transition: transform 0.3s ease;
+      display: inline-block; text-decoration: none;
+    }
+    .button-link:hover { transform: scale(1.05); }
+
+    .bubble-chat {
+      position: fixed; bottom: 20px; left: 20px;
+      background: #0ff; color: #000;
+      padding: 1rem 1.3rem; border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,255,255,0.5);
+      animation: fadeInUp 1s ease forwards;
+      z-index: 999;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .toggle-darkmode {
+      position: fixed; top: 20px; right: 20px;
+      background: #0ff; color: #000;
+      padding: 0.6rem 1rem; border-radius: 30px;
+      cursor: pointer; z-index: 999;
+      box-shadow: 0 0 12px rgba(0,255,255,0.5);
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center; font-size: 0.9rem;
+      padding: 1.5rem; color: #aaa;
+      background: #070b14; margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toggle-darkmode" onclick="toggleMode()">🌗 Mode</div>
+  <div class="bubble-chat" id="bubbleChat">👋 Selamat datang di web KaiNetworkMC!</div>
+
+  <header>
+    <h1>KaiNetworkMC</h1>
+    <p>IP: <strong>play.kainetworkmc.xyz</strong> | Port: <strong>25450</strong></p>
+    <button class="join-btn" onclick="window.open('minecraft://?addExternalServer=KaiNetworkMC|play.kainetworkmc.xyz:25450')">🚀 Join Now</button>
+    <div id="status" class="status-box">⏳ Mengecek status server...</div>
+  </header>
+
+  <div class="section" style="text-align: center;">
+    <a href="https://screenapp.io/app/#/shared/OwRut0UrDO" target="_blank" class="button-link">📖 Tutorial Claim Land</a>
+    <a href="https://discord.gg/EfcJpcsfJ5" target="_blank" class="button-link">💬 Discord</a>
+    <a href="https://bit.ly/Votekai1" target="_blank" class="button-link">🎯 Vote Server</a>
+    <a href="https://chat.whatsapp.com/Jv3WkkIaGUp8XyKXRRqXWT" target="_blank" class="button-link">👥 Grup WhatsApp</a>
+    <a href="https://bit.ly/webkainet" target="_blank" class="button-link">🌐 Website KaiNetworkMC</a>
+  </div>
+
+  <section class="section">
+    <h2>🎖️ Daftar Rank</h2>
+    <div class="rank-list">
+      <div class="rank-card"><h3>🥉 VIP – 15K</h3><p>/feed, /fly, /heal, /mine reset<br>Bonus: 100K</p></div>
+      <div class="rank-card"><h3>🎖 MVP – 25K</h3><p>/fly, /v, /rename, /mine reset<br>Bonus: 500K</p></div>
+      <div class="rank-card"><h3>🏆 LEGENDS – 40K</h3><p>/bc, /nick, /rename, /v<br>Bonus: 1JT</p></div>
+      <div class="rank-card"><h3>💠 KAISTRONG – 100K</h3><p>All Commands + /sizeUI, /tp<br>Bonus: 5JT</p></div>
+      <div class="rank-card"><h3>🌸 GLORY – 200K</h3><p>Full Commands + /repair, /timeUI<br>Bonus: 10JT</p></div>
+    </div>
+
+    <form onsubmit="return kirimWA()">
+      <h2>🛍️ Formulir Pembelian</h2>
+      <select id="rank" required>
+        <option value="">Pilih Rank</option>
+        <option value="VIP">VIP</option>
+        <option value="MVP">MVP</option>
+        <option value="LEGENDS">LEGENDS</option>
+        <option value="KAISTRONG">KAISTRONG</option>
+        <option value="GLORY">GLORY</option>
+      </select>
+      <input type="text" id="player" placeholder="Nama Player Minecraft" required>
+      <select id="bayar" required>
+        <option value="">Metode Pembayaran</option>
+        <option value="Dana">Dana</option>
+        <option value="Gopay">Gopay</option>
+        <option value="ShopeePay">ShopeePay</option>
+        <option value="OVO">OVO</option>
+        <option value="QRIS">QRIS</option>
+      </select>
+      <button type="submit">💬 Beli Sekarang via WhatsApp</button>
+    </form>
+
+    <div class="comments">
+      <h2>💬 Komentar Pengunjung</h2>
+      <input type="text" id="nama" placeholder="Nama (opsional)">
+      <textarea id="pesan" rows="3" placeholder="Tulis komentar kamu..."></textarea>
+      <button onclick="kirimKomentar()">Kirim Komentar</button>
+      <div id="daftarKomentar"></div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 KaiNetworkMC — by Fuad 💠
+  </footer>
+
+  <script>
+    fetch("https://api.mcstatus.io/v2/status/bedrock/play.kainetworkmc.xyz:25450")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("status").textContent =
+          data.online ? `🟢 Online – ${data.players.online}/${data.players.max} pemain` : `🔴 Server Offline`;
+      }).catch(() => {
+        document.getElementById("status").textContent = "⚠️ Gagal cek status server.";
+      });
+
+    function kirimWA() {
+      const rank = document.getElementById("rank").value;
+      const player = document.getElementById("player").value;
+      const bayar = document.getElementById("bayar").value;
+      if (!rank || !player || !bayar) { alert("Lengkapi formulir terlebih dahulu!"); return false; }
+      const msg = `Halo Admin, saya ingin beli Rank *${rank}* untuk player *${player}*. Pembayaran via *${bayar}*.`;
+      window.open(`https://wa.me/6281252768236?text=${encodeURIComponent(msg)}`, "_blank");
+      return false;
+    }
+
+    function kirimKomentar() {
+      const nama = document.getElementById("nama").value || "Anonim";
+      const pesan = document.getElementById("pesan").value.trim();
+      if (!pesan) return;
+      const komentar = { nama, pesan };
+      const list = JSON.parse(localStorage.getItem("komentar") || "[]");
+      list.unshift(komentar);
+      localStorage.setItem("komentar", JSON.stringify(list));
+      tampilKomentar();
+      document.getElementById("pesan").value = "";
+    }
+
+    function tampilKomentar() {
+      const list = JSON.parse(localStorage.getItem("komentar") || "[]");
+      const box = document.getElementById("daftarKomentar");
+      box.innerHTML = "";
+      list.slice(0, 10).forEach(k => {
+        box.innerHTML += `<div class="comment-item"><strong>${k.nama}</strong><br>${k.pesan}</div>`;
+      });
+    }
+
+    function toggleMode() {
+      const isLight = document.body.classList.toggle("light-mode");
+      localStorage.setItem("theme", isLight ? "light" : "dark");
+      applyTheme();
+    }
+
+    function applyTheme() {
+      const isLight = localStorage.getItem("theme") === "light";
+      if (isLight) {
+        document.body.style.background = "linear-gradient(to bottom, #f5f5f5, #ddd)";
+        document.body.style.color = "#111";
+        document.querySelectorAll(".rank-card").forEach(el => {
+          el.style.background = "#fff";
+          el.style.color = "#111";
+          el.style.border = "2px solid #00c3ff";
+        });
+        document.querySelectorAll(".status-box, .comments, form, .comment-item").forEach(el => {
+          el.style.background = "#fff";
+          el.style.color = "#000";
+        });
+      } else {
+        document.body.style.background = "linear-gradient(to bottom, #050d1a, #0c1b2e)";
+        document.body.style.color = "#fff";
+        document.querySelectorAll(".rank-card").forEach(el => {
+          el.style.background = "#131a2f";
+          el.style.color = "#ccc";
+          el.style.border = "2px solid #00fcd1";
+        });
+        document.querySelectorAll(".status-box, .comments, form, .comment-item").forEach(el => {
+          el.style.background = "rgba(255,255,255,0.03)";
+          el.style.color = "#fff";
+        });
+      }
+    }
+
+    setTimeout(() => {
+      document.getElementById("bubbleChat").style.display = "none";
+    }, 5000);
+
+    tampilKomentar();
+    applyTheme();
+  </script>
+</body>
+</html>
